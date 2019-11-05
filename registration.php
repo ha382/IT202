@@ -45,7 +45,11 @@ function validate(){
 	if(email.indexOf('@') > -1){
 		ev.style.display = "none";
 	}
+<<<<<<< HEAD
 	else{/Users/hafsaasad/Desktop/IT\ 202 
+=======
+	else{
+>>>>>>> fa492e10d637d5e078a0e72931723699104e13b7
 		ev.style.display = "block";
 		ev.innerText = "Please enter a valid email address";
 		succeeded = false;
@@ -55,6 +59,7 @@ function validate(){
 	First element should be "Select One", and it should require that
 	some other value is selected in order to proceed
 	*/
+<<<<<<< HEAD
 	var sel = form.dd;
 	//To get by ID uncomment below
 	//sel = document.getElementById("mySelectId");
@@ -67,6 +72,8 @@ function validate(){
 	}
 	console.log(sel.options[sel.selectedIndex].value);
 	return succeeded;	
+=======
+>>>>>>> fa492e10d637d5e078a0e72931723699104e13b7
 	return succeeded;	
 }
 </script>
@@ -89,6 +96,7 @@ input { border: 1px solid black; }
 <span style="display:none;" id="validation.password"></span>
 
 <!-- Add dropdown element (something specific to your project) -->
+<<<<<<< HEAD
 <select name="dd" id="mySelectId">
 	<option value="-1">Select One</option>
 	<option value="0">Zero</option>
@@ -96,6 +104,8 @@ input { border: 1px solid black; }
 </select>
 
 
+=======
+>>>>>>> fa492e10d637d5e078a0e72931723699104e13b7
 <input type="submit" value="Try it"/>
 </form>
 </div>
