@@ -45,7 +45,7 @@ function validate(){
 	if(email.indexOf('@') > -1){
 		ev.style.display = "none";
 	}
-	else{
+	else{/Users/hafsaasad/Desktop/IT\ 202 
 		ev.style.display = "block";
 		ev.innerText = "Please enter a valid email address";
 		succeeded = false;
