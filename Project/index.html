@@ -1,26 +1,67 @@
+<?php
+//ini_set('display_errors',1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+?>
+
 <html>
-  <head></head>
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+	$('#register_form').submit(function(event){
+		if(this.password.value.length == 0 || this.confirm.value.length == 0){
+			alert("Please enter a password and confirm it");
+			return false;
+		}
+		let isOk = this.password.value == this.confirm.value;
+		if(!isOk){
+			alert("Password and Confirm password don't match");
+		}
+		return isOk;
+	});
+});
+</script>
+</head>
 <body>
-  <h1> Login Page </h1>
-    
-      
-<form method="POST" action= "#">
-  Name:
-  <input type="text" name="username"/>
-  Password:
-  <input type="password" name="password"/>
-  <input type="submit" value="Login"/>
-  <p></p>
-</form>
-
-<form method="POST" action = "#">
-  <p></p>    
-	<input type="radio" name="assign" value="ans2"> Check Account<br>
-	<input type="radio" name="assign" value="ans3"> New Appointment<br>
-	<input type="radio" name="assign" value="ans4"> Delete Appointment<br>
-  <input type="submit" value=""/>
-</form>
-      
-
+	<form id="register_form" method="POST"/>
+    Username:
+		<input type="text" name="usernameLogin"/>
+		Password:
+    <input type="password" name="passwordLogin"/>
+		Confirm Password:
+    <input type="password" name="confirm"/>
+		<input type="submit" value="Register"/>
+	</form>
 </body>
 </html>
+<?php
+	if(isset($_POST['usernameLogin'])&& isset($_POST['passwordLogin'])&& isset($_POST['confirm'])){
+		$user = $_POST['usernameLogin'];
+		$pass = $_POST['passwordLogin'];
+		$confirm = $_POST['confirm'];
+		if($pass != $confirm){
+				echo "Passwords don't match";
+				exit();
+		}
+		//do further validation?
+		try{
+			$hash = password_hash($pass, PASSWORD_BCRYPT);
+			require("config.php");
+			//$username, $password, $host, $database
+			$conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
+			$db = new PDO($conn_string, $username, $password);
+			$stmt = $db->prepare("INSERT into costumer (customer_id, Customer_Name, Gender, Address) VALUES(Nothing, usernameLogin, $passwordLogin, Nothing, Nothing)");
+			$result = $stmt->execute(array("$usernameLogin"=>$user,"$passwordLogin"=>$hash));
+			//print_r($stmt->errorInfo());
+			
+			//echo var_export($result, true);
+		}
+		catch(Exception $e){
+			//echo $e->getMessage();
+		}
+	}
+?>
