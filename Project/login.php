@@ -24,7 +24,7 @@ require("config.php");
 //$username, $password, $host, $database
 $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 $db = new PDO($conn_string, $username, $password);
-$stmt = $db->prepare("select id, username, password from `Users` where username = :username LIMIT 1");
+$stmt = $db->prepare("select id, username, password from `Customer accounts` where username = :username LIMIT 1");
 $stmt->execute(array(":username"=>$user));
 //print_r($stmt->errorInfo());
 $results = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,7 +40,7 @@ $user = array("id"=> $results['id'],
 $_SESSION['user'] = $user;
 echo var_export($user, true);
 echo var_export($_SESSION, true);
-header("Location: samplelandingpage.php");
+header("Location: landing.php");
 }
 else{
 echo "Invalid password";
