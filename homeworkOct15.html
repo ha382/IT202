@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+h1 {color:red;}
+p {color:blue;}
+</style>
 <script>
 	function queryParam(){
 		var params = new URLSearchParams(location.search);
@@ -21,18 +25,51 @@
 		}
 	}
 </script>
+   <title>My Website</title>
 </head>
 <body onload="queryParam();">
 	<header>
-		<nav> <a href="?page=home">home</a><a href="?page=about">2</a>
+		<nav> <a href="?page=home">home</a><br><a href="?page=about">about</a>
 			<!--Create route for Home-->
 			<!--Create route for About-->
 		</nav>
 	</header>
 	<div id="home">
 		This is home
+   <img src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/home-icon.png" width="100" height="100"></img>
+   
+   <p></p><h1><strong>Strong text</strong></h1>
+   
+   <table>
+  <tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Password</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>John</td>
+    <td>hello</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>James</td>
+    <td>world</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Jess</td>
+    <td>myPassword</td>
+  </tr>
+</table>
+   
 	</div>
 	<div id="about">
+ This is about
+   <img src="https://cdn0.iconfinder.com/data/icons/vector-huge-black-icons/16/info-512.png" width="100" height="100"></img>
+   <br>Enter a message
+   <br><textarea rows="4" cols="50">
+</textarea>
 		<!-- About page using HTML5 Semantics-->
 	</div>
 	<footer></footer>
