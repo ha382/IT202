@@ -18,7 +18,7 @@
 
 <html>
 <body>
-  <h2>You've been logged out</h2>
+  <h2>Your account has been deleted</h2>
   <form action="login.php">
   <input type="submit" value="return">
   </form>

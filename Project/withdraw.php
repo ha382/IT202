@@ -4,7 +4,6 @@ ini_set('display_errors',1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 //check if a user is logged in
 if(session_status() == PHP_SESSION_ACTIVE && $_SESSION['id'] != '') {
   //echo 'Session is active';
@@ -13,19 +12,17 @@ else{
   header("Location: loginPrompt.php");
   //echo 'Session is not active';
 }
-
-
 ?>
 
 <html>
 
 <head></head>
 <body>
-  <h1>Welcome to my Banking App</h1>
+  <h1> Withdraw </h1>
 
 
 Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
-  <form method="POST">
+  <form method="POST" action="withdrawRedirect.php">
     <p></p>
         Places to go:
         <nav>
@@ -46,33 +43,32 @@ Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
           <a href="transfer.php">Transfer</a> |
           <a href="logout.php">Log Out</a>
         </nav>
-    <p></p>       
-    <!--            
+    <p></p>  
+    
+    
+    
+          <!--              
         <input type="radio" name="action" value="home"> Home Page <br>
         <input type="radio" name="action" value="profile"> Profile Page <br>
   			<input type="radio" name="action" value="deposit" > Deposit Page <br>
   			<input type="radio" name="action" value="withdraw" > Withdraw Page <br>
   			<input type="radio" name="action" value="transfer" > Transfer Page <br>
   			<input type="radio" name="action" value="logOut" > Log Out <br> -->
+    <p></p>
+        Enter an amount:
     <p></p>  
-                     
+    <input type="text" name="amountWithdraw">  <br>
+    <p></p>  
+    <input type="submit" value="Withdraw"/>                  
     
   </form>
   
-  
-  
-  <!-- SUMMARY -->
-  <p>
-  <h3>Summary</h3>
-  </p>
-  <p>
-  Balance: <?php echo $_SESSION['balance']."<br>"; ?>
-  
-  </p>
-     
+        
 </body>
 </html>
 
+
+<!--
 <?php
 if(isset($_POST['action'])){
   $action = $_POST['action'];
@@ -81,18 +77,43 @@ else{
   $action = "none";
 }
 
+if(isset($_POST['amountWithdraw'])){
+  $amountWithdraw = $_POST['amountWithdraw'];
+}else{
+  $amountWithdraw = 0;
+}
+
+
+
+
+
 
 
 require('config.php');
 //echo "Loaded Host: " . $host;
 $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
   try{
-    $id = $_SESSION['id'];
     $db = new PDO($conn_string, $username, $password);
+    $id = $_SESSION['id'];
     $stmt = $db->query("SELECT * FROM CustomerAccounts WHERE id = '$id'");
     $result = $stmt->fetch();
-    $_SESSION['balance'] = $result['balance'];
+    if(is_numeric($amountWithdraw) && $amountWithdraw >= 0){
+      echo $amountWithdraw." IS A NUMBER! <br>";
+      //deposit
+      $startBalance = $result['balance'];
+      $endBalance =  $startBalance - $amountWithdraw;
     
+      $insert_query = "UPDATE CustomerAccounts SET balance = '$endBalance' WHERE id = '$id'";
+      $stmt = $db->prepare($insert_query);
+      $r = $stmt->execute();
+      $_SESSION['balance'] = $endBalance;
+      $amountWithdraw = 0;
+    }
+    else{
+      echo $amountWithdraw." IS NOT A NUMBER! <br>";
+      //return
+    }
+
       /*
       //Places to go
       if($action == "home"){
@@ -127,9 +148,9 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
           $params["path"], $params["domain"], 
           $params["secure"], $params["httponly"]); 
           header("Location: logout.php");
-        } 
+        }         
       }
-      */
+        */
       
       
   }
@@ -137,7 +158,9 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
     echo $e->getMessage();
     exit("Something went wrong");
   }
+?> -->
 
+<?php
   echo "Session Data: ";
   print_r($_SESSION);
 ?>  

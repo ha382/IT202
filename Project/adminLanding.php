@@ -21,7 +21,7 @@ else{
 
 <head></head>
 <body>
-  <h1>Welcome to my Banking App</h1>
+  <h1>Welcome ADMIN</h1>
 
 
 Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
@@ -32,21 +32,14 @@ Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
           <a href="landing.php">Home</a> |
           <a href="profile.php">Profile</a> |
           <a href="accounts.php">Accounts</a> |
-          <?php 
-          if($_SESSION['isAdmin'] == 1)
-          {
-            echo "<a href='adminUsers.php'>"."All Users";
-            //echo Admin Users;
-            echo "</a> |";
-          }
-          ?>
+          <a href="adminUsers.php">All Users</a> |
           <a href="transactionHistory.php">Transaction History</a> |
           <a href="deposit.php">Deposit</a> |
           <a href="withdraw.php">Withdraw</a> |
           <a href="transfer.php">Transfer</a> |
           <a href="logout.php">Log Out</a>
         </nav>
-    <p></p>       
+    <p></p>     
     <!--            
         <input type="radio" name="action" value="home"> Home Page <br>
         <input type="radio" name="action" value="profile"> Profile Page <br>

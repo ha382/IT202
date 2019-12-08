@@ -2,8 +2,7 @@
 session_start();
 ini_set('display_errors',1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+error_reporting(E_ALL);  
 
 //check if a user is logged in
 if(session_status() == PHP_SESSION_ACTIVE && $_SESSION['id'] != '') {
@@ -13,19 +12,17 @@ else{
   header("Location: loginPrompt.php");
   //echo 'Session is not active';
 }
-
-
 ?>
 
 <html>
 
 <head></head>
 <body>
-  <h1>Welcome to my Banking App</h1>
+  <h1> Deposit </h1>
 
 
 Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
-  <form method="POST">
+  <form method="POST" action="depositRedirect.php">
     <p></p>
         Places to go:
         <nav>
@@ -46,33 +43,33 @@ Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
           <a href="transfer.php">Transfer</a> |
           <a href="logout.php">Log Out</a>
         </nav>
-    <p></p>       
-    <!--            
+    <p></p>             
+    <!--    
         <input type="radio" name="action" value="home"> Home Page <br>
         <input type="radio" name="action" value="profile"> Profile Page <br>
   			<input type="radio" name="action" value="deposit" > Deposit Page <br>
   			<input type="radio" name="action" value="withdraw" > Withdraw Page <br>
   			<input type="radio" name="action" value="transfer" > Transfer Page <br>
-  			<input type="radio" name="action" value="logOut" > Log Out <br> -->
+  			<input type="radio" name="action" value="logOut" > Log Out <br>
+    -->  
     <p></p>  
-                     
+    <!-- <input type="submit" value="Go"/>  -->
+    
+    <p></p>
+        Enter an amount:
+    <p></p>              
+        <!-- <input type="radio" name="action" value="deposit"> Deposit <br> -->
+        <input type="text" name="amountDeposit">  <br>
+    <p></p>  
+    <input type="submit" value="Deposit"/>  
     
   </form>
   
-  
-  
-  <!-- SUMMARY -->
-  <p>
-  <h3>Summary</h3>
-  </p>
-  <p>
-  Balance: <?php echo $_SESSION['balance']."<br>"; ?>
-  
-  </p>
-     
+        
 </body>
 </html>
 
+<!--
 <?php
 if(isset($_POST['action'])){
   $action = $_POST['action'];
@@ -81,17 +78,38 @@ else{
   $action = "none";
 }
 
+if(isset($_POST['amountDeposit'])){
+  $amountDeposit = $_POST['amountDeposit'];
+}else{
+  $amountDeposit = 0;
+}
+
 
 
 require('config.php');
 //echo "Loaded Host: " . $host;
 $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
   try{
-    $id = $_SESSION['id'];
     $db = new PDO($conn_string, $username, $password);
+    $id = $_SESSION['id'];
     $stmt = $db->query("SELECT * FROM CustomerAccounts WHERE id = '$id'");
     $result = $stmt->fetch();
-    $_SESSION['balance'] = $result['balance'];
+    if(is_numeric($amountDeposit) && $amountDeposit >= 0){
+      echo $amountDeposit." IS A NUMBER! <br>";
+      //deposit
+      $startBalance = $result['balance'];
+      $endBalance =  $startBalance + $amountDeposit;
+    
+      $insert_query = "UPDATE CustomerAccounts SET balance = '$endBalance' WHERE id = '$id'";
+      $stmt = $db->prepare($insert_query);
+      $r = $stmt->execute();
+      $_SESSION['balance'] = $endBalance;
+      $amountDeposit = 0;
+    }
+    else{
+      echo $amountDeposit." IS NOT A NUMBER! <br>";
+      //return
+    }
     
       /*
       //Places to go
@@ -128,8 +146,10 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
           $params["secure"], $params["httponly"]); 
           header("Location: logout.php");
         } 
-      }
+      } 
       */
+      
+      
       
       
   }
@@ -140,4 +160,10 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
 
   echo "Session Data: ";
   print_r($_SESSION);
-?>  
+?>  -->
+
+<?php
+
+  echo "Session Data: ";
+  print_r($_SESSION);
+?>

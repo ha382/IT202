@@ -4,7 +4,6 @@ ini_set('display_errors',1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 //check if a user is logged in
 if(session_status() == PHP_SESSION_ACTIVE && $_SESSION['id'] != '') {
   //echo 'Session is active';
@@ -13,15 +12,13 @@ else{
   header("Location: loginPrompt.php");
   //echo 'Session is not active';
 }
-
-
 ?>
 
 <html>
 
 <head></head>
 <body>
-  <h1>Welcome to my Banking App</h1>
+  <h1> Profile </h1>
 
 
 Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
@@ -46,8 +43,8 @@ Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
           <a href="transfer.php">Transfer</a> |
           <a href="logout.php">Log Out</a>
         </nav>
-    <p></p>       
-    <!--            
+    <p></p>  
+    <!--              
         <input type="radio" name="action" value="home"> Home Page <br>
         <input type="radio" name="action" value="profile"> Profile Page <br>
   			<input type="radio" name="action" value="deposit" > Deposit Page <br>
@@ -55,46 +52,61 @@ Hello there, <?php echo $_SESSION['user'].", "."userID: ".$_SESSION['id'] ;?>
   			<input type="radio" name="action" value="transfer" > Transfer Page <br>
   			<input type="radio" name="action" value="logOut" > Log Out <br> -->
     <p></p>  
-                     
+    <!-- <input type="submit" value="Go"/>  -->   
+    
+    
+                   
+    <p></p>
+        Things to do:
+    <p></p>
+        <input type="text" name="textbox">  <br>      
+        <p></p>          
+        <input type="radio" name="action" value="nameChange"> Change Name <br>
+        <input type="radio" name="action" value="passwordChange"> Change Password <br>
+        <!--<input type="radio" name="action" value="delete"> Delete Account <br>-->
+        <!--
+  			<input type="radio" name="action" value="deposit" >  <br>
+  			<input type="radio" name="action" value="withdraw" >  <br>
+  			<input type="radio" name="action" value="transfer" >  <br>
+  			<input type="radio" name="action" value="logOut" >  <br>
+        -->
+        
+        
+        
+    <p></p>  
+    <input type="submit" value="Go"/>       
+    
+    
+                  
     
   </form>
   
-  
-  
-  <!-- SUMMARY -->
-  <p>
-  <h3>Summary</h3>
-  </p>
-  <p>
-  Balance: <?php echo $_SESSION['balance']."<br>"; ?>
-  
-  </p>
-     
+        
 </body>
 </html>
 
 <?php
+if(isset($_POST['textbox'])){
+  $textbox = $_POST['textbox'];
+}
 if(isset($_POST['action'])){
   $action = $_POST['action'];
 }
 else{
   $action = "none";
 }
-
+$id = $_SESSION['id'];
 
 
 require('config.php');
 //echo "Loaded Host: " . $host;
 $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
   try{
-    $id = $_SESSION['id'];
     $db = new PDO($conn_string, $username, $password);
-    $stmt = $db->query("SELECT * FROM CustomerAccounts WHERE id = '$id'");
-    $result = $stmt->fetch();
-    $_SESSION['balance'] = $result['balance'];
     
+      
+      //PLACES TO GO
       /*
-      //Places to go
       if($action == "home"){
          header("Location: landing.php");
       }
@@ -116,7 +128,7 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
         session_start();
         session_unset();
         session_destroy();
-        echo "You have been logged out";
+        echo "You have been loggeds out";
         echo var_export($_SESSION, true);
         //get session cookie and delete/clear it for this session
         if (ini_get("session.use_cookies")) { 
@@ -128,8 +140,41 @@ $conn_string = "mysql:host=$host;dbname=$database;charset=utf8mb4";
           $params["secure"], $params["httponly"]); 
           header("Location: logout.php");
         } 
-      }
+      }      
       */
+      
+      
+      
+      
+      
+      //THINGS TO DO
+      if($action == "nameChange"){
+        $insert_query = "UPDATE CustomerAccounts SET username = '$textbox' WHERE id = '$id'";
+        //$insert_query2 = "UPDATE CustomerAccounts SET username = '$textbox' WHERE id = '$id'";
+        $stmt = $db->prepare($insert_query);
+        $r = $stmt->execute();
+        
+          //$_SESSION['user'] = $textbox;
+        
+        echo "Name changed to ". $textbox."<br>";
+      }
+      if($action == "passwordChange")
+      {
+        $hashed = password_hash($textbox, PASSWORD_DEFAULT);
+        $insert_query = "UPDATE CustomerAccounts SET password = '$hashed' WHERE id = '$id'";
+        $stmt = $db->prepare($insert_query);
+        $r = $stmt->execute();
+        
+          $_SESSION['user'] = $textbox;
+        echo "Password changed to ".$textbox."<br>";
+      }
+      if($action=="delete"){
+            
+        $delete_query="DELETE FROM CustomerAccounts WHERE id = '$id'";
+        $stmt = $db->prepare($delete_query);
+        $r = $stmt->execute();
+        header("Location: deleteAccount.php");
+      }
       
       
   }

@@ -4,10 +4,18 @@ ini_set('display_errors',1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ?>
+
+
+
 <html>
 <head></head>
 <body>
   <h1> Homepage </h1>
+	<h3> About this project </h3>
+	<p>
+	This project is a banking app in which users can create an account and login. While logged in, a user can depost, withdraw, or transfer money. 
+	Additionally, users can request a new account, view transaction history, and edit their profiles. 
+	</p>
 
   <form method="POST">
   Username:
@@ -52,14 +60,29 @@ try{
   if($action == "createAccount")
   {
    //https://www.youtube.com/watch?v=Qq96ZgiY1dY
-   $hashed = password_hash($Bankpassword, PASSWORD_DEFAULT);
-    $insert_query = "INSERT INTO CustomerAccounts (id, username, password) VALUES (NULL, '$Bankusername', '$hashed');";
+   $hashed = password_hash($Bankpassword, PASSWORD_DEFAULT); 
+    //$insert_query = "INSERT INTO CustomerAccounts (id, username, password) VALUES (NULL, '$Bankusername', '$hashed');";
+    $insert_query2 = "INSERT INTO CustomerAccounts (isAdmin, id, username, password, balance, transactionHistory) VALUES ('0', NULL, '$Bankusername', '$hashed', 0, 'NULL');";
+    $insert_queryADMIN = "INSERT INTO CustomerAccounts (isAdmin, id, username, password, balance, transactionHistory) VALUES ('1', NULL, '$Bankusername', '$hashed', 0, 'NULL');";
     //$insert_query = "INSERT INTO CustomerAccounts (username, password) VALUES (ha382, myPassword);";
-    $stmt = $db->prepare($insert_query);
+    
+    
+    if($Bankusername == "ADMIN"){
+      $stmt = $db->prepare($insert_queryADMIN);
+    }
+    else{
+      $stmt = $db->prepare($insert_query2);    
+    }
     print_r($stmt->errorInfo());
     $r = $stmt->execute();
     //TODO catch error from DB
     //echo "<br>" . ($r>0?"Insert successful":"Insert failed") . "<br>"; 
+    
+    
+    
+    
+    
+                            
     if($r > 0){
       header("Location: registered.php");      
     }
@@ -82,28 +105,30 @@ try{
       
       $_SESSION['user'] = $Bankusername;
       $_SESSION['id'] = $id;
-					echo var_export($Bankusername, true);
-					echo var_export($id, true);
-					echo var_export($_SESSION, true);
+      $_SESSION['isAdmin'] = $result['isAdmin'];
+      $_SESSION['password'] = $Bankpassword;
+					//echo var_export($Bankusername, true);
+					//echo var_export($id, true);
+					//echo var_export($_SESSION, true);
       if($correct > 0)
       {
-      header("Location: landing.php");
+        header("Location: redirect.php");
       }
       else
       {
-        
-      header("Location: login.php");
+        header("Location: login.php");
       }
-      
     }
+    
+            
   }
     
     
     }
 }
 catch (Exception $e){
-echo $e->getMessage();
-exit("Something went wrong");
-}
+  echo $e->getMessage();
+  exit("Something went wrong");
+  }
 }
 ?> 
